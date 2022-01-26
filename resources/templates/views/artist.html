@@ -1,0 +1,92 @@
+{% extends 'layouts/base.html' %}
+{% block styles %}
+    <style>
+        .img-small{
+            width: 75px;
+            height:75px;
+        }
+        .img-middle {
+            width: 120px;
+            height: 120px;
+        }
+        .img-big {
+            width: 380px;
+            height: 350px;
+        }
+    </style>
+{% endblock %}
+{% block index %}
+    <h1>{{ artist.name }}</h1>
+    <a href="{{ artist['external_urls']['spotify'] }}" target="_blank"> {{artist.name}} en Spotify </a>
+    <hr>
+    <div class="row" >
+        <div class='col-4'>
+
+            {% if artist['images'] %}
+
+                <img src="{{ artist['images'][0]['url'] }}" class='img-big'>
+
+            {% else %}
+
+                <img class="img-thumbnail img-middle" src="https://via.placeholder.com/90">
+
+            {% endif %}
+            <hr>
+            <h3>Artistas Relacionados </h3>
+            <div class="row">
+                {% for related in relateds %}
+                    <div class="">
+                        <a href="{{ url_for('artist', id=related.id) }}">
+                            {% if related.images %}
+                                <img title={{ related.name }} src="{{ related.images[-1].url }}" class="img-small rounded-circle"> 
+                            {% else %}
+                                <img title={{ related.name }} class="img-small rounded-circle" src="https://via.placeholder.com/90">
+                            {% endif%}
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-8">
+            <div class="table-responsive" style="margin-left:50px">
+                <table class="table table-striped table-hover">
+                    <thead class="thead-dark"> 
+                        <tr>
+                            <th>Cancion</th>
+                            <th>Popularidad</th>
+                            <th>Spotify</th>
+                    </thead>
+                    <tbody>
+                        {% for track in tracks %}
+                            <tr>
+                                <td>
+
+                                    <span>{{ track.name }} - </span>
+                                    <small>
+                                        <a href="{{ track.album.uri }}">
+                                            {{ track.album.name }}
+                                        </a>
+                                    </small>
+                                    <br>
+                                    {% if track.preview_url %}
+                                        <audio controls>
+                                            <source src="{{ track.preview_url }}" type="audio/ogg">
+                                        </audio>
+
+                                    {% endif%}
+                                </td>
+                                <td> {{ track.popularity }} </td>
+                                <td>  
+                                    <a class="btn btn-primary" href="{{ track.album.uri }}">
+                                        Escuchar
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <div>
+{% endblock%}

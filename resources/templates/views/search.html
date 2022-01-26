@@ -1,0 +1,67 @@
+{% extends 'layouts/base.html' %}
+{% block styles %}
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Assistant');
+
+        body {
+            background: #fff;
+            font-family: Assistant, sans-serif
+        }
+
+        .external-link {
+            cursor: pointer;
+            color: blue
+        }
+
+        .img-middle {
+            width: 120px;
+            height: 120px;
+        }
+    </style>
+{% endblock %}
+{% block index %}
+<div class="row">
+    <div class="col-12">
+        <h3> Resultados del artista: {{ artist_name }} </h3>
+        <span>API URL: {{api_url}}</span>
+        <hr>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark"> 
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Nombre</th>
+                        <th>Genero</th>
+                        <th>Seguidores</th>
+                        <th>Popularidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for artist in results %}
+                    <tr>
+                        
+                        <td>
+                            {% if artist.images %}
+                                    <img class="img-thumbnail img-middle" src="{{ artist.images[-1].url }}">
+                            {% else %}
+                                    <img class="img-thumbnail img-middle" src="https://via.placeholder.com/90">
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('artist', id=artist.id) }}">
+                                {{artist.name}}
+                            </a>
+                        </td>
+                        <td>{{ artist.genres | join(', ') }}</td>
+                        <td>{{ artist.followers.total }}</td>
+                        <td>{{ artist.popularity }} </td>
+                    
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+  
+{% endblock%}
